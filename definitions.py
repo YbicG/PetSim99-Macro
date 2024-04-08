@@ -1,11 +1,6 @@
-import random
-import pytesseract
 import pyautogui
 import keyboard
-import time
-import random
 import autoit
-from PIL import Image, ImageGrab
 from collections.abc import Callable, Iterable, Sequence
 from typing import Final, NamedTuple, SupportsIndex, SupportsInt, TypeVar
 from screeninfo import get_monitors
