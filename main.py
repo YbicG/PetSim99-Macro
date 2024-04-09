@@ -768,7 +768,8 @@ def main():
                     CURRENT_GOAL = 4
             else:
                 print("Couldn't find a valid goal.")
-                
+            
+            Input.click((100, 100))
             wait(5)
         except:
             print(f"[{name}] Error connecting to the server! Retrying in 5s...")
