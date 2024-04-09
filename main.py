@@ -7,11 +7,14 @@ import definitions as macro
 import keyboard
 import threading
 import os
+import log_handler
 from config import *
 from time import sleep as wait
 from definitions import Input, Keybind, HomeUICordinates, BottomBarInventoryCords, SideBarInventoryCords, InventoryCords, TeleportCords, HatchingCords, PotionCords
 from petsim.api import Clan, ActiveClanBattle
-from petsim.api.subclasses import BattleGoal
+from petsim.api.subclasses import BattleGoal    
+
+print = log_handler.init()
 
 # You can use Ctrl+Alt+P to stop the program.
 
@@ -226,15 +229,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.click(HomeUICordinates.Exit) # Just in case it goes over the gold maker by accident
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
                         
@@ -337,15 +341,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
             
@@ -385,15 +390,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
             
@@ -433,15 +439,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
             
@@ -481,15 +488,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
 
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
             
@@ -530,15 +538,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
                         
@@ -570,15 +579,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
                         
@@ -610,15 +620,16 @@ def switch(name, goal: BattleGoal, current_goal_id):
             Input.walk(25, "right")
             wait(.5)
             
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+            if USE_AUTO_FARM:
+                if AUTOFARM_ENABLED:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = False
+                    wait(1)
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
+                else:
+                    Input.click(HomeUICordinates.AutoFarm)
+                    AUTOFARM_ENABLED = True
             
             active = True
                         
@@ -727,6 +738,8 @@ def main():
     Input.click(HomeUICordinates.Hoverboard)
     
     while RUNNING == True:
+        name = "Main Loop"
+        
         try:
             main_goal = Goal4()
             secondary_goal = Goal3()

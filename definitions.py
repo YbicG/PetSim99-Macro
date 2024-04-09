@@ -1,6 +1,6 @@
 import pyautogui
 import keyboard
-import autoit
+import autoit_custom as autoit # Have to use this to compile
 from collections.abc import Callable, Iterable, Sequence
 from typing import Final, NamedTuple, SupportsIndex, SupportsInt, TypeVar
 from screeninfo import get_monitors

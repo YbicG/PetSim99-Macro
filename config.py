@@ -1,31 +1,33 @@
-# [Enabled/Disabled]
-EARN_DIAMONDS_ENABLED = True # Earn Diamonds
-EARN_DIAMOND_BREAKABLES_ENABLED = True # Break Diamond Breakables
-HATCH_BEST_EGGS_ENABLED = True # Hatch Best Eggs
-BREAK_BREAKABLES_BEST_AREA_ENABLED = True # Break Breakables in Best Area
-USE_IV_POTIONS_ENABLED = True # Use Tier 4 Potions
-USE_FRUITS_ENABLED = True # Use Fruits
-BREAK_MINI_CHESTS_ENABLED = True # Break Mini-Chests in Best Area
-BREAK_COIN_JARS_ENABLED = True # Break Coin Jars in Best Area
-BREAK_COMETS_ENABLED = True # Break Comets in Best Area
-BREAK_PINATAS_ENABLED = True # Break Piñatas in Best Area
-BREAK_LUCKY_BLOCKS_ENABLED = True # Break Lucky Blocks in Best Area
-HATCH_RARE_PETS_ENABLED = True # Hatch Rare "???" Pets
-CONSUME_XP_POTIONS_ENABLED = True # Consume XP Potions
+import configparser
 
-# [Consume XP Potions]
-XP_POTION = "Ultimate XP Potion"
-MAXIMUM_XP_POTION_USAGE = 25
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-# [Use Fruits]
-FRUITS = ["Apple", "Banana", "Orange", "Pineapple", "Watermelon"] # A list of fruits to use (don't recommend changing unless you know what you are doing).
-MAXIMUM_FRUIT_USAGE_EACH = 50 # How many fruits you would like to use each for every fruit quest.
+USE_AUTO_FARM = config.getboolean('Enabled/Disabled', 'USE_AUTO_FARM')
 
-# [Use Potion IV]
-IV_POTION = "Damage Potion IV"
-MAXIMUM_POTION_USAGE = 1000
+EARN_DIAMONDS_ENABLED = config.getboolean('Enabled/Disabled', 'EARN_DIAMONDS_ENABLED')
+EARN_DIAMOND_BREAKABLES_ENABLED = config.getboolean('Enabled/Disabled', 'EARN_DIAMOND_BREAKABLES_ENABLED')
+HATCH_BEST_EGGS_ENABLED = config.getboolean('Enabled/Disabled', 'HATCH_BEST_EGGS_ENABLED')
+BREAK_BREAKABLES_BEST_AREA_ENABLED = config.getboolean('Enabled/Disabled', 'BREAK_BREAKABLES_BEST_AREA_ENABLED')
+USE_IV_POTIONS_ENABLED = config.getboolean('Enabled/Disabled', 'USE_IV_POTIONS_ENABLED')
+USE_FRUITS_ENABLED = config.getboolean('Enabled/Disabled', 'USE_FRUITS_ENABLED')
+BREAK_MINI_CHESTS_ENABLED = config.getboolean('Enabled/Disabled', 'BREAK_MINI_CHESTS_ENABLED')
+BREAK_COIN_JARS_ENABLED = config.getboolean('Enabled/Disabled', 'BREAK_COIN_JARS_ENABLED')
+BREAK_COMETS_ENABLED = config.getboolean('Enabled/Disabled', 'BREAK_COMETS_ENABLED')
+BREAK_PINATAS_ENABLED = config.getboolean('Enabled/Disabled', 'BREAK_PINATAS_ENABLED')
+BREAK_LUCKY_BLOCKS_ENABLED = config.getboolean('Enabled/Disabled', 'BREAK_LUCKY_BLOCKS_ENABLED')
+HATCH_RARE_PETS_ENABLED = config.getboolean('Enabled/Disabled', 'HATCH_RARE_PETS_ENABLED')
+CONSUME_XP_POTIONS_ENABLED = config.getboolean('Enabled/Disabled', 'CONSUME_XP_POTIONS_ENABLED')
 
-# [Delays (in Seconds)]
-ITEM_SPAWN_DELAY = 5 # How long between spawning items.
-ACTIVE_CHECK_INTERVAL = 15 # How long in seconds to check for the active quest.
-TELEPORT_DELAY = 3 # You may have to increase this if it takes forever to teleport
+XP_POTION = config.get('Consume XP Potions', 'XP_POTION')
+MAXIMUM_XP_POTION_USAGE = config.getint('Consume XP Potions', 'MAXIMUM_XP_POTION_USAGE')
+
+FRUITS = [fruit.strip() for fruit in config.get('Use Fruits', 'FRUITS').split(',')]
+MAXIMUM_FRUIT_USAGE_EACH = config.getint('Use Fruits', 'MAXIMUM_FRUIT_USAGE_EACH')
+
+IV_POTION = config.get('Use Potion IV', 'IV_POTION')
+MAXIMUM_POTION_USAGE = config.getint('Use Potion IV', 'MAXIMUM_POTION_USAGE')
+
+ITEM_SPAWN_DELAY = config.getint('Delays (in Seconds)', 'ITEM_SPAWN_DELAY')
+ACTIVE_CHECK_INTERVAL = config.getint('Delays (in Seconds)', 'ACTIVE_CHECK_INTERVAL')
+TELEPORT_DELAY = config.getint('Delays (in Seconds)', 'TELEPORT_DELAY')
