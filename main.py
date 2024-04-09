@@ -107,10 +107,10 @@ def is_macroable(goal: BattleGoal) -> bool:
 def teleport(area: str):
     Input.click(HomeUICordinates.Teleport)
     wait(1)
-    Input.click(TeleportCords.SearchBar)
+    Input.click(TeleportCords.SearchBar, clicks=2)
     wait(.5)
     Input.typewrite(area)
-    wait(.5)
+    wait(1)
     Input.click((100, 100))
     wait(.5)
     Input.click(TeleportCords.FirstItem, clicks=3) # Clicking more than once in case it doesn't register
