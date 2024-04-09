@@ -31,3 +31,6 @@ MAXIMUM_POTION_USAGE = config.getint('Use Potion IV', 'MAXIMUM_POTION_USAGE')
 ITEM_SPAWN_DELAY = config.getint('Delays (in Seconds)', 'ITEM_SPAWN_DELAY')
 ACTIVE_CHECK_INTERVAL = config.getint('Delays (in Seconds)', 'ACTIVE_CHECK_INTERVAL')
 TELEPORT_DELAY = config.getint('Delays (in Seconds)', 'TELEPORT_DELAY')
+
+X_OFFSET = config.getint('Offsets', "X")
+Y_OFFSET = config.getint('Offsets', "Y")

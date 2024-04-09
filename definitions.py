@@ -1,6 +1,7 @@
 import pyautogui
 import keyboard
 import autoit_custom as autoit # Have to use this to compile
+from config import X_OFFSET, Y_OFFSET
 from collections.abc import Callable, Iterable, Sequence
 from typing import Final, NamedTuple, SupportsIndex, SupportsInt, TypeVar
 from screeninfo import get_monitors
@@ -19,8 +20,8 @@ def auto_resize(cords: tuple):
         
         ratio_x = monitor_x / original_x
         ratio_y = monitor_y / original_y
-        resized_x = int((cords[0]-5) * ratio_x)
-        resized_y = int(cords[1] * ratio_y)
+        resized_x = int((cords[0]+X_OFFSET) * ratio_x)
+        resized_y = int((cords[1]+Y_OFFSET) * ratio_y)
         return (resized_x, resized_y)
     else:
         ratio_x = monitor_x / original_x
