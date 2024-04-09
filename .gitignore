@@ -1,4 +1,5 @@
 **/__pycache__/
 **/release/
 **/.vscode/
-build.json
+onedir_build.json
+onefile_build.json
