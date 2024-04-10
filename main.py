@@ -2,785 +2,205 @@
 Made by YbicG (@ybicg)
 ©️ 2024 All Rights Reserved. Unauthorized redistribution or modification of this program is illegal and can have legal consequences.
 """
-import petsim.api as api
-import definitions as macro
-import keyboard
-import threading
+import sys
 import os
-import log_handler
-from config import *
-from time import sleep as wait
-from definitions import Input, Keybind, HomeUICordinates, BottomBarInventoryCords, SideBarInventoryCords, InventoryCords, TeleportCords, HatchingCords, PotionCords
-from petsim.api import Clan, ActiveClanBattle
-from petsim.api.subclasses import BattleGoal    
+import configparser
+import macro
+import threading
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QLineEdit, QPushButton, QStackedWidget
+from QSwitchControl import SwitchControl
 
-print = log_handler.init()
+config = configparser.ConfigParser()
+config.optionxform = str 
+config.read('config.ini')
 
-# You can use Ctrl+Alt+P to stop the program.
+class Form(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-RUNNING = True
-AUTOFARM_ENABLED = False
+    def initUI(self):
+        self.setWindowTitle("Clan Macro")
+        self.setStyleSheet("""
+        QWidget {
+            background-color: #222222;
+            color: #ffffff;
+            font-size: 16px;
+            font-family: Arial;
+        }
+        QLabel {
+            margin-right: 10px;
+        }
+        QPushButton {
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+            padding: 3px 10px;
+            margin: 5px;
+        }
+        QPushButton:hover {
+            background-color: #555555;
+        }
+        QPushButton:pressed {
+            background-color: #777777;
+        }
+        """)
 
-CURRENT_GOAL = 4
+        self.stacked_widget = QStackedWidget()
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.stacked_widget)
+        self.setLayout(self.layout)
 
-LAST_AREA = "Dominus Vault"
-FIRST_AREA = "Tech Spawn"
-
-QUESTS = {
-    "7": "Earn Diamonds",
-    "9": "Break Diamond Breakables",
-    "12": "Craft Tier 3 Potions",
-    "13": "Craft Tier III Enchants",
-    "20": "Hatch Best Eggs",
-    "21": "Break Breakables in Best Area",
-    "25": "Find chests in the Digsite",
-    "26": "Catch fish in the Fishing Minigame",
-    "27": "Ice Obby Completions",
-    "28": "Complete the Pyramid Obby",
-    "29": "Complete the Jungle Obby",
-    "34": "Use Tier 4 Potions",
-    "35": "Use Fruits",
-    "36": "Complete the Sled Race",
-    "37": "Break Coin Jars in Best Area",
-    "38": "Break Comets in Best Area",
-    "39": "Break Mini-Chests in Best Area",
-    "40": "Make Golden Pets from Best Egg",
-    "41": "Make Rainbow Pets from Best Egg",
-    "42": "Hatch Rare \"??\" Pets",
-    "43": "Break Piñatas in Best Area",
-    "44": "Break Lucky Blocks in Best Area",
-    "45": "Find Chests in Advanced Digsite",
-    "46": "Catch Fish in Advanced Fishing",
-    "73": "Break breakables in Treasure Hideout",
-    "74": "Consume XP Potions"
-}
-
-MACROABLE = [
-    "7",    # Earn Diamonds - Done
-    "9",    # Break Diamond Breakables - Done
-    "20",   # Hatch Best Eggs - Done
-    "21",   # Break Breakables in Best Area - Done
-    "34",   # Use Tier 4 Potions - Done
-    "35",   # Use Fruits - Done
-    "39",   # Break Mini-Chests in Best Area - Done
-    "37",   # Break Coin Jars in Best Area - Done
-    "38",   # Break Comets in Best Area - Done
-    "43",   # Break Piñatas in Best Area - Done
-    "44",   # Break Lucky Blocks in Best Area - Done
-    "42",   # Hatch Rare "???" Pets - Done
-    "74"    # Consume XP Potions -
-]
-
-# Helper Functions
-def on_key_event(event):
-    global RUNNING
-    if event.name == 'p' and keyboard.is_pressed('ctrl') and keyboard.is_pressed('alt'):
-        RUNNING = False
-        print("Exiting the macro...")
-        keyboard.unhook_all()
-        os._exit(os.EX_OK)
-
-def Goal3() -> BattleGoal:
-    clan = Clan("EXP")
-    goal = clan.CurrentBattle.Goal3
-    
-    return goal
-
-def Goal4() -> BattleGoal:
-    clan = Clan("EXP")
-    goal = clan.CurrentBattle.Goal4
-    
-    return goal
-
-def quest_name(goal: BattleGoal) -> str:
-        if str(goal.TypeID) in QUESTS:
-            return QUESTS[str(goal.TypeID)]
-        else:
-            return None
-
-def is_macroable(goal: BattleGoal) -> bool:
-    if not quest_name(goal):
-        return False
-    
-    return True if str(goal.TypeID) in MACROABLE else False
-
-def teleport(area: str):
-    Input.click(HomeUICordinates.Teleport)
-    wait(1)
-    Input.click(TeleportCords.SearchBar, clicks=2)
-    wait(.5)
-    Input.typewrite(area)
-    wait(1)
-    Input.click((100, 100))
-    wait(.5)
-    Input.click(TeleportCords.FirstItem, clicks=3) # Clicking more than once in case it doesn't register
-    wait(.5)
-    Input.click(TeleportCords.Ok)
-    wait(.5)
-    Input.click(TeleportCords.Ok)
-    wait(.5)
-    Input.click(TeleportCords.Exit)
-
-ACTIVE_ITEMS = {
-    "Basic Coin Jar": False,
-    "Comet": False,
-    "Lucky Block": False,
-    "ata": False,
-}
-
-def use_item(name):
-    global ACTIVE_ITEMS
-    
-    ACTIVE_ITEMS[name] = True
-    
-    def execute():
-        print(f"[{name if name != "ata" else "Piñata"}] Starting Thread...\n")
-        while ACTIVE_ITEMS[name]:
-            Input.click(HomeUICordinates.Inventory)
-            wait(.5)
-            Input.click(SideBarInventoryCords.Items)
-            wait(.5)
-            Input.click(InventoryCords.SeachBar)
-            wait(.5)
-            Input.typewrite(name)
-            wait(.5)
-            Input.click(InventoryCords.FirstItem)
-            wait(.5)
-            Input.click(InventoryCords.Ok)
-            wait(.5)
-            Input.click(InventoryCords.Exit)
-            
-            wait(ITEM_SPAWN_DELAY)
-        
-        print(f"[{name if name != "ata" else "Piñata"}] Exiting Thread...\n")
-    
-    thread = threading.Thread(name=name, target=execute)
-    
-    thread.start()
-    
-    return thread
-
-ACTIVE_POTIONS = False
-
-def use_potions():
-    global ACTIVE_POTIONS
-    
-    ACTIVE_POTIONS = True
-    
-    def execute():
-        print("[IV Potions] Starting Thread...\n")
-    
-        for i in range(10):
-            if not ACTIVE_POTIONS:
+        enabled_disabled_layout = QVBoxLayout()
+        for section in config.sections():
+            if section.startswith("Enabled/Disabled"):
+                for option, value in config.items(section):
+                    switch = SwitchControl(bg_color="#777777", circle_color="#DDD", active_color="#aa00ff", animation_duration=300, checked=config.getboolean(section, option, fallback=False), change_cursor=True)
+                    label = QLabel(option.replace("_", " ").title().replace("Iv", "IV").replace("Xp", "XP"))
+                    hbox = QHBoxLayout()
+                    hbox.addWidget(label)
+                    hbox.addStretch(1)
+                    hbox.addWidget(switch)
+                    enabled_disabled_layout.addLayout(hbox)
+                    switch.stateChanged.connect(lambda state, sec=section, opt=option: self.on_switch_changed(sec, opt, state))
                 break
-            
-            Input.click(HomeUICordinates.Inventory)
-            wait(.5)
-            Input.click(SideBarInventoryCords.Potions)
-            wait(.5)
-            Input.click(InventoryCords.SeachBar)
-            wait(.5)
-            Input.typewrite(IV_POTION)
-            wait(.5)
+
+        other_layout = QVBoxLayout()
+        for section in config.sections():
+            if not section.startswith("Enabled/Disabled"):
+                group_label = QLabel(section.replace("_", " ").title().replace("Iv", "IV").replace("Xp", "XP"))
+                group_label.setStyleSheet("font-weight: bold; margin-top: 10px; margin-bottom: 5px;")
+                other_layout.addWidget(group_label)
+
+                for option, value in config.items(section):
+                    label = QLabel(option.replace("_", " ").title().replace("Iv", "IV").replace("Xp", "XP"))
+                    edit_line = QLineEdit(value)
+                    edit_line.setPlaceholderText("Enter value...")
+                    edit_line.setStyleSheet("background-color: #333333; color: #ffffff; border: 1px solid #555555; padding: 3px;")
+                    edit_line.textChanged.connect(lambda text, sec=section, opt=option: self.on_value_changed(sec, opt, text))
                     
-            for potion in range(round(MAXIMUM_POTION_USAGE/10)):
-                Input.click(PotionCords.FirstItem)
-                wait(.03)   
-                    
-            wait(.5)
-            Input.click(InventoryCords.Exit)
-                
-            wait(ITEM_SPAWN_DELAY) 
-                
+                    hbox = QHBoxLayout()
+                    hbox.addWidget(label)
+                    hbox.addWidget(edit_line)
+                    other_layout.addLayout(hbox)
+
+        enabled_disabled_widget = QWidget()
+        enabled_disabled_widget.setLayout(enabled_disabled_layout)
+        self.stacked_widget.addWidget(enabled_disabled_widget)
+
+        other_widget = QWidget()
+        other_widget.setLayout(other_layout)
+        self.stacked_widget.addWidget(other_widget)
+
+        self.current_page_index = 0
+
+        self.prev_button = QPushButton("< Prev")
+        self.prev_button.clicked.connect(self.show_previous_page)
+        self.next_button = QPushButton("Next >")
+        self.next_button.clicked.connect(self.show_next_page)
+
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.prev_button)
+        button_layout.addStretch(1)
+        button_layout.addWidget(self.next_button)
         
-        print("[IV Potions] Exiting Thread...\n")
-            
-    thread = threading.Thread(name="Active Potions", target=execute)
+        self.start_button = QPushButton("Start")
+        self.start_button.setStyleSheet("""
+        QPushButton {
+            background-color: #4CAF50;  /* Green */
+            color: #ffffff;
+            border: 1px solid #555555;
+            padding: 3px 10px;
+            margin: 5px;
+        }
+        QPushButton:hover {
+            background-color: #66BB6A;  /* Lighter green on hover */
+        }
+        QPushButton:pressed {
+            background-color: #388E3C;  /* Darker green when pressed */
+        }
+        QPushButton:disabled {
+                background-color: #888888;  /* Grayed out */
+        }
+        """)
+
+        self.stop_button = QPushButton  ("Stop")  
+        self.stop_button.setStyleSheet("""
+        QPushButton {
+            background-color: #f44336;  /* Red */
+            color: #ffffff;
+            border: 1px solid #555555;
+            padding: 3px 10px;
+            margin: 5px;
+        }
+        QPushButton:hover {
+            background-color: #EF5350;  /* Lighter red on hover */
+        }
+        QPushButton:pressed {
+            background-color: #D32F2F;  /* Darker red when pressed */
+        }
+        QPushButton:disabled {
+                background-color: #888888;  /* Grayed out */
+        }
+        """)
+
+
+        self.start_button.clicked.connect(self.on_start_clicked)
+        self.stop_button.clicked.connect(self.on_stop_clicked)
+
+        self.enable_start_stop_buttons(True)
         
-    thread.start()
+        button_layout_below = QHBoxLayout()
+        button_layout_below.addWidget(self.start_button)
+        button_layout_below.addWidget(self.stop_button)
+
+        self.layout.addLayout(button_layout_below)
+        self.layout.addLayout(button_layout)
+
+        self.show()
+
+    def show_previous_page(self):
+        self.current_page_index = (self.current_page_index - 1) % self.stacked_widget.count()
+        self.stacked_widget.setCurrentIndex(self.current_page_index)
+
+    def show_next_page(self):
+        self.current_page_index = (self.current_page_index + 1) % self.stacked_widget.count()
+        self.stacked_widget.setCurrentIndex(self.current_page_index)
+
+    def on_switch_changed(self, section, option, state):
+        state = True if state == 2 else False
+        config.set(section, option, str(state))
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
     
-    return thread
+    def on_value_changed(self, section, option, value):
+        config.set(section, option, value)
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
+    
+    def enable_start_stop_buttons(self, enabled):
+        self.start_button.setEnabled(enabled)
+        self.stop_button.setEnabled(not enabled)
         
-# Main Loop
-wait(2)
-
-def switch(name, goal: BattleGoal, current_goal_id):
-    global ACTIVE_ITEMS, ACTIVE_POTIONS, AUTOFARM_ENABLED
+        config.set("Developer (Do Not Modify)", "MACRO_ENABLED", str(not enabled))
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
     
-    print("Current Quest: "+name)
-    
-    match name:
-        case "Break Diamond Breakables":
-            if not EARN_DIAMOND_BREAKABLES_ENABLED:
-                return
-            
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.click(HomeUICordinates.Hoverboard)
-            wait(1)
-            
-            Input.walk(35, "left")
-            Input.walk(8, "forward")
-            Input.walk(21, "left")
-            wait(.5)
-            
-            Input.click(HomeUICordinates.Exit) # Just in case it goes over the gold maker by accident
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                    
-        case "Use Tier 4 Potions":
-            if not USE_IV_POTIONS_ENABLED:
-                return
-            
-            active = True
-            
-            potion_thread = use_potions()
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        ACTIVE_POTIONS = False
-                        active = False
-                        
-                        potion_thread.join()
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
+    def on_start_clicked(self):
+        self.enable_start_stop_buttons(False)
 
-        case "Use Fruits":
-            if not USE_FRUITS_ENABLED:
-                return
-            
-            active = True
-            
-            for fruit in FRUITS:
-                Input.click(HomeUICordinates.Inventory)
-                wait(.5)
-                Input.click(SideBarInventoryCords.Items)
-                wait(.5)
-                Input.click(InventoryCords.SeachBar)
-                wait(.5)
-                Input.typewrite(fruit)
-                wait(.5)
-                
-                for fruit in range(MAXIMUM_FRUIT_USAGE_EACH):
-                    Input.click(InventoryCords.FirstItem)
-                    wait(.05)
-                    
-                wait(1)
-                Input.click(InventoryCords.Ok)
-                wait(.5)
-                Input.click(InventoryCords.Exit)
-                wait(1)
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                    
-        case "Break Lucky Blocks in Best Area":
-            if not BREAK_LUCKY_BLOCKS_ENABLED:
-                return
-            
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-            
-            item = "Lucky Block"
-            
-            item_thread = use_item(item)
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        
-                        ACTIVE_ITEMS[item] = False
-                        active = False
-                        
-                        item_thread.join()
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                    
-        case "Break Piñatas in Best Area":
-            if not BREAK_PINATAS_ENABLED:
-                return
-            
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-            
-            item = "ata" # Can't use Piñata because the ene doesn't show up
-            
-            item_thread = use_item(item)
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        
-                        ACTIVE_ITEMS[item] = False
-                        active = False
-                        
-                        item_thread.join()
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                    
-        case "Break Comets in Best Area":
-            if not BREAK_COMETS_ENABLED:
-                return
-            
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-            
-            item = "Comet"
-            
-            item_thread = use_item(item)
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
+    def on_stop_clicked(self):
+        self.enable_start_stop_buttons(True)
 
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        
-                        ACTIVE_ITEMS[item] = False
-                        active = False
-                        
-                        item_thread.join()
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                
-        case "Break Coin Jars in Best Area":
-            if not BREAK_COIN_JARS_ENABLED:
-                return
-            
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
+macro_thread = threading.Thread(target=macro.main, name="Macro Thread")
 
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-            
-            item = "Basic Coin Jar"
-            
-            item_thread = use_item(item)
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
+macro_thread.start()
 
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        
-                        ACTIVE_ITEMS[item] = False
-                        active = False
-                        
-                        item_thread.join()
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                    
-                
-        case "Break Mini-Chests in Best Area":
-            if not BREAK_MINI_CHESTS_ENABLED:
-                return
 
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                
-        case "Earn Diamonds":
-            if not EARN_DIAMONDS_ENABLED:
-                return
-            
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                
-        case "Break Breakables in Best Area":
-            if not BREAK_BREAKABLES_BEST_AREA_ENABLED:
-                return
-            
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.walk(25, "right")
-            wait(.5)
-            
-            if USE_AUTO_FARM:
-                if AUTOFARM_ENABLED:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = False
-                    wait(1)
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-                else:
-                    Input.click(HomeUICordinates.AutoFarm)
-                    AUTOFARM_ENABLED = True
-            
-            active = True
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-            
-        case "Hatch Best Eggs":
-            if not HATCH_BEST_EGGS_ENABLED:
-                return
-
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.click(HomeUICordinates.Hoverboard)
-            wait(1)
-            Input.walk(14, "right")
-            Input.walk(26, "backward")
-            Input.walk(16.5, "left")
-            wait(.5)
-            Input.send("e")
-            Input.click(HatchingCords.BuyMost)
-                        
-            active = True
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        Input.walk(27, "forward")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-                
-        case "Hatch Rare \"??\" Pets":
-            if not HATCH_RARE_PETS_ENABLED:
-                return
-            
-            teleport(LAST_AREA)
-            wait(TELEPORT_DELAY)
-            teleport(FIRST_AREA)
-            wait(TELEPORT_DELAY)
-            Input.click(HomeUICordinates.Hoverboard)
-            wait(1)
-            Input.walk(14, "right")
-            Input.walk(26, "backward")
-            Input.walk(16.5, "left")
-            wait(.5)
-            Input.send("e")
-            Input.click(HatchingCords.BuyMost)
-                        
-            active = True
-                        
-            while active:
-                try:
-                    if current_goal_id == 3:
-                        goal = Goal3()
-                    else:
-                        goal = Goal4()
-                        
-                    if quest_name(goal) == name:
-                        print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                        wait(ACTIVE_CHECK_INTERVAL)
-                    else:
-                        print(f"[{name}] Quest isn't active!")
-                        Input.walk(27, "forward")
-                        active = False
-                except:
-                    print(f"[{name}] Error connecting to the server!")
-                    wait(ACTIVE_CHECK_INTERVAL)
-
-def main():
-    global CURRENT_GOAL
-    
-    keyboard.on_press(on_key_event)
-    # Click in case not tabbed in
-    Input.click((100, 100))
-    
-    teleport(LAST_AREA)
-    wait(TELEPORT_DELAY)
-    teleport(FIRST_AREA)
-    wait(TELEPORT_DELAY)
-    Input.click(HomeUICordinates.Hoverboard)
-    
-    while RUNNING == True:
-        name = "Main Loop"
-        
-        try:
-            main_goal = Goal4()
-            secondary_goal = Goal3()
-            
-            # Alternate between Goal 3 and 4 so there is nice variety
-            if CURRENT_GOAL == 4:
-                if is_macroable(main_goal):
-                    CURRENT_GOAL = 3
-                    name = quest_name(main_goal)
-        
-                    switch(name, main_goal, 4)
-                        
-                else:
-                    print("Couldn't find a valid quest in Goal 4. Current Type: ", main_goal.TypeID)
-                    CURRENT_GOAL = 3
-                        
-            elif CURRENT_GOAL == 3:
-                if is_macroable(secondary_goal):    
-                    CURRENT_GOAL = 4
-                    name = quest_name(secondary_goal) 
-    
-                    switch(name, secondary_goal, 3)
-            
-                else:
-                    print("Couldn't find a valid quest in Goal 3. Current Type: ", secondary_goal.TypeID)
-                    CURRENT_GOAL = 4
-            else:
-                print("Couldn't find a valid goal.")
-            
-            Input.click((100, 100))
-            wait(5)
-        except:
-            print(f"[{name}] Error connecting to the server! Retrying in 5s...")
-            wait(5)
-
-if __name__ == "__main__":
-    main()
-
-print("Exiting the macro...")
-keyboard.unhook_all()
-
-"""
-©️ 2024 All Rights Reserved. Unauthorized redistribution or modification of this program is illegal and can have legal consequences.
-"""
+app = QApplication(sys.argv)
+icon = QIcon(os.path.join(os.path.dirname(__file__), "ui", "clanlogo.ico"))
+app.setWindowIcon(icon)
+form = Form()
+sys.exit(app.exec_())
