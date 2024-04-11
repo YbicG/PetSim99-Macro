@@ -2,6 +2,7 @@
 Made by YbicG (@ybicg)
 ©️ 2024 All Rights Reserved. Unauthorized redistribution or modification of this program is illegal and can have legal consequences.
 """
+import hashlib
 import sys
 import os
 import configparser
@@ -13,7 +14,7 @@ import functions.log_handler as log_handler; print = log_handler.init()
 from config import AutoConfig
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QLineEdit, QPushButton, QStackedWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QLabel, QVBoxLayout, QLineEdit, QPushButton, QStackedWidget, QMessageBox, QDialog
 from QSwitchControl import SwitchControl
 
 config = configparser.ConfigParser()
@@ -209,17 +210,71 @@ class Form(QWidget):
         Config.SYSTEM_RUNNING = False
         keyboard.unhook_all()
         event.accept()
-        
+class PasswordForm(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle("Enter Password")
+        self.setStyleSheet("""
+        QWidget {
+            background-color: #222222;
+            color: #ffffff;
+            font-size: 16px;
+            font-family: Arial;
+        }
+        QLabel {
+            margin-right: 10px;
+        }
+        QPushButton {
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+            padding: 3px 10px;
+            margin: 5px;
+        }
+        QPushButton:hover {
+            background-color: #555555;
+        }
+        QPushButton:pressed {
+            background-color: #777777;
+        }
+        """)
+
+        self.layout = QVBoxLayout()
+        self.password_label = QLabel("Enter Password:")
+        self.password_edit = QLineEdit()
+        self.password_edit.setEchoMode(QLineEdit.Password)
+        self.submit_button = QPushButton("Submit")
+        self.submit_button.clicked.connect(self.check_password)
+
+        self.layout.addWidget(self.password_label)
+        self.layout.addWidget(self.password_edit)
+        self.layout.addWidget(self.submit_button)
+        self.setLayout(self.layout)
+
+    def check_password(self):
+        entered_password = self.password_edit.text()
+        stored_password = "05ff5b621c891b851911d2481295fe2e1f9fa521afdd8758206b890561f2c312"
+        encrypted_entered_password = hashlib.sha256(entered_password.encode()).hexdigest()
+
+        if encrypted_entered_password == stored_password:
+            main_form = Form()
+            main_form.show()
+            self.destroy()
+        else:
+            QMessageBox.warning(self, "Incorrect Password", "The entered password is incorrect.")
 
 macro_thread = threading.Thread(target=macro.main, name="Macro Thread")
 macro_thread.daemon = True
 macro_thread.start()
-
-
+    
 app = QApplication(sys.argv)
 icon = QIcon(os.path.join(os.path.dirname(__file__), "lib", "clanlogo.ico"))
 app.setWindowIcon(icon)
-form = Form()
-sys.exit(app.exec_())
 
-# TODO: Add a password to block unwanted users
+password_form = PasswordForm()
+password_form.show()
+
+sys.exit(app.exec_())
