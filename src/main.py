@@ -9,6 +9,7 @@ import functions.macro as macro
 import keyboard
 import threading
 import config as cfg
+import functions.log_handler as log_handler; print = log_handler.init()
 from config import AutoConfig
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
@@ -167,6 +168,7 @@ class Form(QWidget):
         self.layout.addLayout(button_layout)
 
         self.show()
+        self.raise_()
 
     def show_previous_page(self):
         self.current_page_index = (self.current_page_index - 1) % self.stacked_widget.count()
