@@ -72,7 +72,7 @@ ACTIVE_ITEMS = {
 } 
 
 def main():
-    import log_handler; print = log_handler.init()
+    from . import log_handler; print = log_handler.init()
     import config
     from config import AutoConfig
     

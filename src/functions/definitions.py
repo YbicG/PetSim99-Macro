@@ -1,8 +1,8 @@
 import pyautogui
 import keyboard
-from .. import autoit_custom as autoit # Have to use this to compile
-from .. import config
-from ..config import AutoConfig
+import autoit_custom as autoit # Have to use this to compile
+import config
+from config import AutoConfig
 from collections.abc import Callable, Iterable, Sequence
 from typing import Final, NamedTuple, SupportsIndex, SupportsInt, TypeVar
 from screeninfo import get_monitors

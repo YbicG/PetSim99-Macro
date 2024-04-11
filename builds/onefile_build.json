@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/main.py"
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/src/main.py"
   },
   {
    "optionDest": "onefile",
@@ -59,19 +59,19 @@
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/autoit_custom;autoit_custom/"
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/src/autoit_custom;autoit_custom/"
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/definitions.py;."
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/src/functions;functions/"
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/log_handler.py;."
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/src/lib;lib/"
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/config.py;."
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/src/config.py;."
   }
  ],
  "nonPyinstallerOptions": {
