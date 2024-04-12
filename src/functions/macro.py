@@ -62,7 +62,7 @@ MACROABLE = [
         "43",   # Break Piñatas in Best Area - Done
         "44",   # Break Lucky Blocks in Best Area - Done
         "42",   # Hatch Rare "???" Pets - Done
-        "74"    # Consume XP Potions -
+        "DISABLED" # Consume XP Potions -
 ]
 
 ACTIVE_ITEMS = {
