@@ -252,6 +252,7 @@ class Form(QWidget):
         Config.SYSTEM_RUNNING = False
         keyboard.unhook_all()
         event.accept()
+        os._exit(os.EX_OK)
 class PasswordForm(QWidget):
     def __init__(self):
         super().__init__()
@@ -324,6 +325,7 @@ class PasswordForm(QWidget):
         Config.SYSTEM_RUNNING = False
         keyboard.unhook_all()
         event.accept()
+        os._exit(os.EX_OK)
 
 def onClose():
     print("Shutting down systems...")
@@ -343,5 +345,6 @@ app.setWindowIcon(icon)
 
 password_form = PasswordForm()
 password_form.show()
+password_form.raise_()
 
 sys.exit(app.exec_())
