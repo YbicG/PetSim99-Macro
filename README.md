@@ -53,6 +53,9 @@ A: Most likely, it is because it was incorrectly flagged as malware. This is due
 ### Removed
 - None
 
+## Release 1.0.0 (Beta)
+### Beta Released
+
 # To Do:
 - Fix movement when hatching eggs and going to VIP area.
 - During item quests, if there is no more of the item, do another quest.
