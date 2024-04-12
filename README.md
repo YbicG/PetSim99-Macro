@@ -7,7 +7,7 @@
 6. Make sure that Autofarm is disabled and Auto Hatch is **enabled**.
 7. Run `Clan Macro.exe` and enter the correct password. You will be taken to a configuration page where you can modify settings to your liking. Once you are ready, hit the green start button and it will start the macro.
 
-## FAQ
+## FAQs
 **Q: The cursor is missing the teleport search bar, is it broken?**
 
 A: No it isn't broken. Because Roblox doesn't resize everything correctly, the position of the buttons can vary on each monitor, even if they are the same resolution. To fix the issue, open your config and modify the Y offset config to a higher negative number. If it is missing in the other direction, modify the X offset to a higher negative or positive number, based on your needs.
