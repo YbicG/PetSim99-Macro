@@ -671,8 +671,24 @@ def main():
                     Input.click((100, 100))
                     return
 
+                teleport(FIRST_AREA)
+                wait(Config.TELEPORT_DELAY)
                 teleport(LAST_AREA)
                 wait(Config.TELEPORT_DELAY)
+                Input.walk(25, "right")
+                wait(.5)
+                
+                if Config.USE_AUTO_FARM:
+                    if AUTOFARM_ENABLED:
+                        Input.click(HomeUICordinates.AutoFarm)
+                        AUTOFARM_ENABLED = False
+                        wait(1)
+                        Input.click(HomeUICordinates.AutoFarm)
+                        AUTOFARM_ENABLED = True
+                    else:
+                        Input.click(HomeUICordinates.AutoFarm)
+                        AUTOFARM_ENABLED = True
+
                 teleport(FIRST_AREA)
                 wait(Config.TELEPORT_DELAY)
                 Input.click(HomeUICordinates.Hoverboard)
@@ -710,8 +726,24 @@ def main():
                     Input.click((100, 100))
                     return
                 
+                teleport(FIRST_AREA)
+                wait(Config.TELEPORT_DELAY)
                 teleport(LAST_AREA)
                 wait(Config.TELEPORT_DELAY)
+                Input.walk(25, "right")
+                wait(.5)
+                
+                if Config.USE_AUTO_FARM:
+                    if AUTOFARM_ENABLED:
+                        Input.click(HomeUICordinates.AutoFarm)
+                        AUTOFARM_ENABLED = False
+                        wait(1)
+                        Input.click(HomeUICordinates.AutoFarm)
+                        AUTOFARM_ENABLED = True
+                    else:
+                        Input.click(HomeUICordinates.AutoFarm)
+                        AUTOFARM_ENABLED = True
+
                 teleport(FIRST_AREA)
                 wait(Config.TELEPORT_DELAY)
                 Input.click(HomeUICordinates.Hoverboard)
@@ -743,9 +775,30 @@ def main():
                     except:
                         print(f"[{name}] Error connecting to the server!")
                         wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
-
+                        
+    def on_afk():
+        teleport(FIRST_AREA)
+        wait(Config.TELEPORT_DELAY)
+        teleport(LAST_AREA)
+        wait(Config.TELEPORT_DELAY)
+        Input.walk(25, "right")
+        wait(.5)
+                
+        if Config.USE_AUTO_FARM:
+            if AUTOFARM_ENABLED:
+                Input.click(HomeUICordinates.AutoFarm)
+                AUTOFARM_ENABLED = False
+                wait(1)
+                Input.click(HomeUICordinates.AutoFarm)
+                AUTOFARM_ENABLED = True
+            else:
+                Input.click(HomeUICordinates.AutoFarm)
+                AUTOFARM_ENABLED = True
+        
+        
     def run():
         global CURRENT_GOAL
+        global IN_LAST_AREA
         
         while not Config.MACRO_ENABLED:
             wait(2)
@@ -773,6 +826,7 @@ def main():
                     # Alternate between Goal 3 and 4 so there is nice variety
                     if CURRENT_GOAL == 4:
                         if is_macroable(main_goal):
+                            IN_LAST_AREA = False
                             name = quest_name(main_goal)
                 
                             switch(name, main_goal, 4)
@@ -782,7 +836,8 @@ def main():
                             CURRENT_GOAL = 3
                                 
                     elif CURRENT_GOAL == 3:
-                        if is_macroable(secondary_goal):    
+                        if is_macroable(secondary_goal):
+                            IN_LAST_AREA = False   
                             CURRENT_GOAL = 4
                             name = quest_name(secondary_goal) 
             
@@ -795,8 +850,12 @@ def main():
                         print("Couldn't find a valid goal.")
                     
                     Input.click((100, 100))
+
+                    if not IN_LAST_AREA:
+                        IN_LAST_AREA = True
+                        on_afk()
+                        
                     wait(Config.NO_QUEST_CHECK_INERVAL)
-                
                 except Exception as e:
                     logger_error = log_handler.logging.getLogger('error_logger')
                     logger_error.error(e)
