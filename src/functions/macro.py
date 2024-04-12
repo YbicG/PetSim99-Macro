@@ -255,13 +255,13 @@ def main():
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
                             Input.click((100, 100))
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         
             case "Use Tier 4 Potions":
                 if not Config.USE_IV_POTIONS_ENABLED:
@@ -281,7 +281,7 @@ def main():
                             
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             ACTIVE_POTIONS = False
@@ -290,7 +290,7 @@ def main():
                             potion_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
 
             case "Use Fruits":
                 if not Config.USE_FRUITS_ENABLED:
@@ -328,13 +328,13 @@ def main():
                             
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         
             case "Break Lucky Blocks in Best Area":
                 if not Config.BREAK_LUCKY_BLOCKS_ENABLED:
@@ -374,7 +374,7 @@ def main():
                             
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             
@@ -384,7 +384,7 @@ def main():
                             item_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         
             case "Break Piñatas in Best Area":
                 if not Config.BREAK_PINATAS_ENABLED:
@@ -424,7 +424,7 @@ def main():
                             
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             
@@ -434,7 +434,7 @@ def main():
                             item_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         
             case "Break Comets in Best Area":
                 if not Config.BREAK_COMETS_ENABLED:
@@ -474,7 +474,7 @@ def main():
 
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             
@@ -484,7 +484,7 @@ def main():
                             item_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                     
             case "Break Coin Jars in Best Area":
                 if not Config.BREAK_COIN_JARS_ENABLED:
@@ -524,7 +524,7 @@ def main():
 
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             
@@ -534,7 +534,7 @@ def main():
                             item_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         
                     
             case "Break Mini-Chests in Best Area":
@@ -572,13 +572,13 @@ def main():
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
                             Input.click((100, 100))
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                     
             case "Earn Diamonds":
                 if not Config.EARN_DIAMONDS_ENABLED:
@@ -615,13 +615,13 @@ def main():
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
                             Input.click((100, 100))
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                     
             case "Break Breakables in Best Area":
                 if not Config.BREAK_BREAKABLES_BEST_AREA_ENABLED:
@@ -658,13 +658,13 @@ def main():
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
                             Input.click((100, 100))
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                 
             case "Hatch Best Eggs":
                 if not Config.HATCH_BEST_EGGS_ENABLED:
@@ -696,14 +696,14 @@ def main():
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
                             Input.click((100, 100))
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             Input.walk(27, "forward")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                     
             case "Hatch Rare \"??\" Pets":
                 if not Config.HATCH_RARE_PETS_ENABLED:
@@ -735,14 +735,14 @@ def main():
                         if quest_name(goal) == name:
                             print(f"[{name}] Quest is active! ({goal.Progress}/{goal.Amount})")
                             Input.click((100, 100))
-                            wait(Config.ACTIVE_CHECK_INTERVAL)
+                            wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         else:
                             print(f"[{name}] Quest isn't active!")
                             Input.walk(27, "forward")
                             active = False
                     except:
                         print(f"[{name}] Error connecting to the server!")
-                        wait(Config.ACTIVE_CHECK_INTERVAL)
+                        wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
 
     def run():
         global CURRENT_GOAL
@@ -797,7 +797,9 @@ def main():
                     Input.click((100, 100))
                     wait(Config.NO_QUEST_CHECK_INERVAL)
                 
-                except:
+                except Exception as e:
+                    logger_error = log_handler.logging.getLogger('error_logger')
+                    logger_error.error(e)
                     print(f"[{name}] Error connecting to the server! Retrying in 5s...")
                     wait(Config.NO_QUEST_CHECK_INERVAL)
         

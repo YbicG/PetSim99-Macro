@@ -113,9 +113,9 @@ class AutoConfig:
         return self.config.getint('Delays (in Seconds)', 'NO_QUEST_CHECK_INERVAL')
 
     @property
-    def ACTIVE_CHECK_INTERVAL(self):
+    def ACTIVE_QUEST_CHECK_INTERVAL(self):
         self.config.read(self.file_path)
-        return self.config.getint('Delays (in Seconds)', 'ACTIVE_CHECK_INTERVAL')
+        return self.config.getint('Delays (in Seconds)', 'ACTIVE_QUEST_CHECK_INTERVAL')
 
     @property
     def TELEPORT_DELAY(self):
