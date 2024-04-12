@@ -777,6 +777,7 @@ def main():
                         wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
                         
     def on_afk():
+        global AUTOFARM_ENABLED, LAST_AREA, FIRST_AREA
         teleport(FIRST_AREA)
         wait(Config.TELEPORT_DELAY)
         teleport(LAST_AREA)
@@ -797,8 +798,7 @@ def main():
         
         
     def run():
-        global CURRENT_GOAL
-        global IN_LAST_AREA
+        global CURRENT_GOAL, IN_LAST_AREA, LAST_AREA, FIRST_AREA
         
         while not Config.MACRO_ENABLED:
             wait(2)
