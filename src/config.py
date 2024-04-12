@@ -108,9 +108,9 @@ class AutoConfig:
         return self.config.getint('Use Potion IV', 'MAXIMUM_POTION_USAGE')
 
     @property
-    def ITEM_SPAWN_DELAY(self):
+    def NO_QUEST_CHECK_INERVAL(self):
         self.config.read(self.file_path)
-        return self.config.getint('Delays (in Seconds)', 'ITEM_SPAWN_DELAY')
+        return self.config.getint('Delays (in Seconds)', 'NO_QUEST_CHECK_INERVAL')
 
     @property
     def ACTIVE_CHECK_INTERVAL(self):
@@ -131,6 +131,31 @@ class AutoConfig:
     def Y_OFFSET(self):
         self.config.read(self.file_path)
         return self.config.getint('Offsets', 'Y')
+    
+    @property
+    def POTION_USE_DELAY(self):
+        self.config.read(self.file_path)
+        return self.config.getint('Spawn Delays (in Seconds)', 'POTION_USE_DELAY')
+
+    @property
+    def COIN_JAR_SPAWN_DELAY(self):
+        self.config.read(self.file_path)
+        return self.config.getint('Spawn Delays (in Seconds)', 'COIN_JAR_SPAWN_DELAY')
+
+    @property
+    def LUCKY_BLOCK_SPAWN_DELAY(self):
+        self.config.read(self.file_path)
+        return self.config.getint('Spawn Delays (in Seconds)', 'LUCKY_BLOCK_SPAWN_DELAY')
+
+    @property
+    def PINATA_SPAWN_DELAY(self):
+        self.config.read(self.file_path)
+        return self.config.getint('Spawn Delays (in Seconds)', 'PINATA_SPAWN_DELAY')
+
+    @property
+    def COMET_SPAWN_DELAY(self):
+        self.config.read(self.file_path)
+        return self.config.getint('Spawn Delays (in Seconds)', 'COMET_SPAWN_DELAY')
     
     @property
     def MACRO_ENABLED(self):

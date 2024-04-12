@@ -33,28 +33,44 @@ class Form(QWidget):
     def initUI(self):
         self.setWindowTitle("Clan Macro")
         self.setStyleSheet("""
-        QWidget {
-            background-color: #222222;
-            color: #ffffff;
-            font-size: 16px;
-            font-family: Arial;
-        }
-        QLabel {
-            margin-right: 10px;
-        }
-        QPushButton {
-            background-color: #333333;
-            color: #ffffff;
-            border: 1px solid #555555;
-            padding: 3px 10px;
-            margin: 5px;
-        }
-        QPushButton:hover {
-            background-color: #555555;
-        }
-        QPushButton:pressed {
-            background-color: #777777;
-        }
+            QWidget {
+                background-color: #222222;
+                color: #ffffff;
+                font-size: 16px;
+                font-family: Arial;
+            }
+            QLabel {
+                margin-right: 10px;
+            }
+            QPushButton {
+                background-color: #333333;
+                color: #ffffff;
+                border: 2px solid #555555;
+                border-radius: 5px;
+                padding: 8px 16px;
+                margin: 5px;
+            }
+            QPushButton:hover {
+                background-color: #555555;
+                border-color: #777777;
+            }
+            QPushButton:pressed {
+                background-color: #777777;
+                border-color: #999999;
+            }
+            QLineEdit {
+                background-color: #333333;
+                color: #ffffff;
+                border: 1px solid #555555;
+                border-radius: 5px;
+                padding: 5px;
+            }
+            QStackedWidget {
+                background-color: #1e1e1e;
+                border: 1px solid #555555;
+                border-radius: 5px;
+                padding: 10px;
+            }
         """)
 
         self.stacked_widget = QStackedWidget()
@@ -78,7 +94,7 @@ class Form(QWidget):
 
         other_layout = QVBoxLayout()
         for section in config.sections():
-            if not section.startswith("Enabled/Disabled"):
+            if not section.startswith("Enabled/Disabled") and not section.startswith("Spawn Delays (in Seconds)"):
                 group_label = QLabel(section.replace("_", " ").title().replace("Iv", "IV").replace("Xp", "XP"))
                 group_label.setStyleSheet("font-weight: bold; margin-top: 10px; margin-bottom: 5px;")
                 other_layout.addWidget(group_label)
@@ -94,6 +110,27 @@ class Form(QWidget):
                     hbox.addWidget(label)
                     hbox.addWidget(edit_line)
                     other_layout.addLayout(hbox)
+        
+        delays_layout = QVBoxLayout()
+        for section in config.sections():
+            if section.startswith("Spawn Delays (in Seconds)"):
+                group_label = QLabel(section.replace("_", " ").title().replace("Iv", "IV").replace("Xp", "XP"))
+                group_label.setStyleSheet("font-weight: bold; margin-top: 10px; margin-bottom: 5px;")
+                delays_layout.addWidget(group_label)
+                
+                for option, value in config.items(section):
+                    label = QLabel(option.replace("_", " ").title().replace("Iv", "IV").replace("Xp", "XP"))
+                    edit_line = QLineEdit(value)
+                    edit_line.setPlaceholderText("Enter value...")
+                    edit_line.setStyleSheet("background-color: #333333; color: #ffffff; border: 1px solid #555555; padding: 3px;")
+                    edit_line.textChanged.connect(lambda text, sec=section, opt=option: self.on_value_changed(sec, opt, text))
+                    
+                    hbox = QHBoxLayout()
+                    hbox.addWidget(label)
+                    hbox.addWidget(edit_line)
+                    delays_layout.addLayout(hbox)
+                
+                delays_layout.addStretch()
 
         enabled_disabled_widget = QWidget()
         enabled_disabled_widget.setLayout(enabled_disabled_layout)
@@ -102,6 +139,10 @@ class Form(QWidget):
         other_widget = QWidget()
         other_widget.setLayout(other_layout)
         self.stacked_widget.addWidget(other_widget)
+        
+        delay_widget = QWidget()
+        delay_widget.setLayout(delays_layout)
+        self.stacked_widget.addWidget(delay_widget)
 
         self.current_page_index = 0
 
@@ -121,7 +162,7 @@ class Form(QWidget):
             background-color: #4CAF50;  /* Green */
             color: #ffffff;
             border: 1px solid #555555;
-            padding: 3px 10px;
+            padding: 5px 10px;
             margin: 5px;
         }
         QPushButton:hover {
@@ -141,7 +182,7 @@ class Form(QWidget):
             background-color: #f44336;  /* Red */
             color: #ffffff;
             border: 1px solid #555555;
-            padding: 3px 10px;
+            padding: 5px 10px;
             margin: 5px;
         }
         QPushButton:hover {
@@ -218,28 +259,38 @@ class PasswordForm(QWidget):
     def initUI(self):
         self.setWindowTitle("Enter Password")
         self.setStyleSheet("""
-        QWidget {
-            background-color: #222222;
-            color: #ffffff;
-            font-size: 16px;
-            font-family: Arial;
-        }
-        QLabel {
-            margin-right: 10px;
-        }
-        QPushButton {
-            background-color: #333333;
-            color: #ffffff;
-            border: 1px solid #555555;
-            padding: 3px 10px;
-            margin: 5px;
-        }
-        QPushButton:hover {
-            background-color: #555555;
-        }
-        QPushButton:pressed {
-            background-color: #777777;
-        }
+            QWidget {
+                background-color: #222222;
+                color: #ffffff;
+                font-size: 16px;
+                font-family: Arial;
+            }
+            QLabel {
+                margin-right: 10px;
+            }
+            QPushButton {
+                background-color: #333333;
+                color: #ffffff;
+                border: 2px solid #555555;
+                border-radius: 5px;
+                padding: 8px;
+                margin-top: 5px;
+            }
+            QPushButton:hover {
+                background-color: #555555;
+                border-color: #777777;
+            }
+            QPushButton:pressed {
+                background-color: #777777;
+                border-color: #999999;
+            }
+            QLineEdit {
+                background-color: #333333;
+                color: #ffffff;
+                border: 1px solid #555555;
+                border-radius: 5px;
+                padding: 5px;
+            }
         """)
 
         self.layout = QVBoxLayout()
@@ -265,6 +316,13 @@ class PasswordForm(QWidget):
             self.destroy()
         else:
             QMessageBox.warning(self, "Incorrect Password", "The entered password is incorrect.")
+    
+    def closeEvent(self, event):
+        print("Shutting down systems...")
+        Config.MACRO_ENABLED = False
+        Config.SYSTEM_RUNNING = False
+        keyboard.unhook_all()
+        event.accept()
 
 macro_thread = threading.Thread(target=macro.main, name="Macro Thread")
 macro_thread.daemon = True

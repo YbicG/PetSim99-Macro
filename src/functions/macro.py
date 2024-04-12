@@ -13,6 +13,7 @@ from petsim.api import Clan, ActiveClanBattle
 from petsim.api.subclasses import BattleGoal    
 
 AUTOFARM_ENABLED = False
+IN_LAST_AREA = False
 
 CURRENT_GOAL = 4
 
@@ -70,6 +71,8 @@ ACTIVE_ITEMS = {
         "Lucky Block": False,
         "ata": False,
 } 
+
+ACTIVE_POTIONS = False
 
 def main():
     from . import log_handler; print = log_handler.init()
@@ -129,7 +132,7 @@ def main():
         wait(.5)
         Input.click(TeleportCords.Exit)
 
-    def use_item(name):
+    def use_item(name, item_spawn_delay):
         global ACTIVE_ITEMS
         
         ACTIVE_ITEMS[name] = True
@@ -151,7 +154,7 @@ def main():
                 wait(.5)
                 Input.click(InventoryCords.Exit)
                 
-                wait(Config.ITEM_SPAWN_DELAY)
+                wait(item_spawn_delay)
             
             print(f"[{name if name != "ata" else "Piñata"}] Exiting Thread...\n")
         
@@ -160,8 +163,6 @@ def main():
         thread.start()
         
         return thread
-
-    ACTIVE_POTIONS = False
 
     def use_potions():
         global ACTIVE_POTIONS
@@ -191,7 +192,7 @@ def main():
                 wait(.5)
                 Input.click(InventoryCords.Exit)
                     
-                wait(Config.ITEM_SPAWN_DELAY) 
+                wait(Config.POTION_USE_DELAY) 
                     
             
             print("[IV Potions] Exiting Thread...\n")
@@ -362,7 +363,7 @@ def main():
                 
                 item = "Lucky Block"
                 
-                item_thread = use_item(item)
+                item_thread = use_item(item, Config.LUCKY_BLOCK_SPAWN_DELAY)
                             
                 while active:
                     try:
@@ -412,7 +413,7 @@ def main():
                 
                 item = "ata" # Can't use Piñata because the ene doesn't show up
                 
-                item_thread = use_item(item)
+                item_thread = use_item(item, Config.PINATA_SPAWN_DELAY)
                             
                 while active:
                     try:
@@ -462,7 +463,7 @@ def main():
                 
                 item = "Comet"
                 
-                item_thread = use_item(item)
+                item_thread = use_item(item, Config.COMET_SPAWN_DELAY)
                             
                 while active:
                     try:
@@ -512,7 +513,7 @@ def main():
                 
                 item = "Basic Coin Jar"
                 
-                item_thread = use_item(item)
+                item_thread = use_item(item, Config.COMET_SPAWN_DELAY)
                             
                 while active:
                     try:
@@ -794,11 +795,11 @@ def main():
                         print("Couldn't find a valid goal.")
                     
                     Input.click((100, 100))
-                    wait(5)
+                    wait(Config.NO_QUEST_CHECK_INERVAL)
                 
                 except:
                     print(f"[{name}] Error connecting to the server! Retrying in 5s...")
-                    wait(5)
+                    wait(Config.NO_QUEST_CHECK_INERVAL)
         
         print("Exiting the macro...")
         Config.SYSTEM_RUNNING = False
