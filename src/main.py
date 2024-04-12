@@ -8,6 +8,7 @@ import os
 import configparser
 import functions.macro as macro
 import keyboard
+import atexit
 import threading
 import config as cfg
 import functions.log_handler as log_handler; print = log_handler.init()
@@ -323,6 +324,14 @@ class PasswordForm(QWidget):
         Config.SYSTEM_RUNNING = False
         keyboard.unhook_all()
         event.accept()
+
+def onClose():
+    print("Shutting down systems...")
+    Config.MACRO_ENABLED = False
+    Config.SYSTEM_RUNNING = False
+    keyboard.unhook_all()
+
+atexit.register(onClose)
 
 macro_thread = threading.Thread(target=macro.main, name="Macro Thread")
 macro_thread.daemon = True
