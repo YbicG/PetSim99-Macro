@@ -5,6 +5,7 @@ Made by YbicG (@ybicg)
 import hashlib
 import sys
 import os
+import requests
 import configparser
 import functions.macro as macro
 import keyboard
@@ -257,6 +258,7 @@ class PasswordForm(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.ricohash = requests.get("https://ybicg.com/macros/clan-quests/9300f7223a8ca140c7e8ccabd4f72fcd/8380e83f3856b368f2a909c357f1a3ef.txt").text.strip()
 
     def initUI(self):
         self.setWindowTitle("Enter Password")
@@ -309,7 +311,7 @@ class PasswordForm(QWidget):
 
     def check_password(self):
         entered_password = self.password_edit.text()
-        stored_password = "05ff5b621c891b851911d2481295fe2e1f9fa521afdd8758206b890561f2c312"
+        stored_password = self.ricohash
         encrypted_entered_password = hashlib.sha256(entered_password.encode()).hexdigest()
 
         if encrypted_entered_password == stored_password:
