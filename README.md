@@ -42,6 +42,12 @@ A: Most likely, it is because it was incorrectly flagged as malware. This is due
 
 
 # Releases
+## Release 1.0.2
+### Added
+- Better Encryption
+### Removed
+- None
+
 ## Release 1.0.1
 ### Added
 - Added a UI.
