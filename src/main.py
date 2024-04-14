@@ -320,14 +320,6 @@ class PasswordForm(QWidget):
             self.destroy()
         else:
             QMessageBox.warning(self, "Incorrect Password", "The entered password is incorrect.")
-    
-    def closeEvent(self, event):
-        print("Shutting down systems...")
-        Config.MACRO_ENABLED = False
-        Config.SYSTEM_RUNNING = False
-        keyboard.unhook_all()
-        event.accept()
-        os._exit(os.EX_OK)
 
 def onClose():
     print("Shutting down systems...")
