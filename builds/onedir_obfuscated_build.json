@@ -1,0 +1,133 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/main.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": false
+  },
+  {
+   "optionDest": "console",
+   "value": true
+  },
+  {
+   "optionDest": "icon_file",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/lib/clanlogo.ico"
+  },
+  {
+   "optionDest": "name",
+   "value": "Clan Macro"
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/config.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/pyarmor_runtime_000000;pyarmor_runtime_000000/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/lib;lib/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/functions;functions/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/autoit_custom;autoit_custom/"
+  },
+  {
+   "optionDest": "binaries",
+   "value": "C:/Users/djcoo/Documents/Main Documents/Code/Macros/PetSim99-Macro/obfuscated/pyarmor_runtime_000000/pyarmor_runtime.pyd;."
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "keyboard"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "PyQt5"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "PyQt5_sip"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "QSwitchControl"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "screeninfo"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "requests"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "configparser"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "pyautogui"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "petsim-py"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "petsim"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "petsim.api"
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}
