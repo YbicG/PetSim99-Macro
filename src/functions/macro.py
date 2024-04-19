@@ -14,6 +14,7 @@ from petsim.api.subclasses import BattleGoal
 
 AUTOFARM_ENABLED = False
 IN_LAST_AREA = False
+PASSWORD_ENTERED = False
 
 CURRENT_GOAL = 4
 
@@ -65,6 +66,13 @@ MACROABLE = [
         "DISABLED" # Consume XP Potions -
 ]
 
+WHILE_BREAKABLES = [
+    "37", # Break Coin Jars in Best Area - Done
+    "38", # Break Comets in Best Area - Done
+    "43", # Break Piñatas in Best Area - Done
+    "44", # Break Lucky Blocks in Best Area - Done
+]
+
 ACTIVE_ITEMS = {
         "Basic Coin Jar": False,
         "Comet": False,
@@ -74,6 +82,11 @@ ACTIVE_ITEMS = {
 
 ACTIVE_POTIONS = False
 
+def set_enabled(value: bool) -> None:
+    global PASSWORD_ENTERED
+    
+    PASSWORD_ENTERED = value
+    
 def main():
     from . import log_handler; print = log_handler.init()
     import config
@@ -104,17 +117,36 @@ def main():
         return goal
 
     def quest_name(goal: BattleGoal) -> str:
-            if str(goal.TypeID) in QUESTS:
-                return QUESTS[str(goal.TypeID)]
-            else:
-                return None
+        if str(goal.TypeID) in QUESTS:
+            return QUESTS[str(goal.TypeID)]
+        else:
+            return None
 
     def is_macroable(goal: BattleGoal) -> bool:
         if not quest_name(goal):
             return False
-        
         return True if str(goal.TypeID) in MACROABLE else False
+    
+    def usable_while_breakables(goal: BattleGoal) -> bool:
+        if not quest_name(goal):
+            return False
+        
+        return True if str(goal.TypeID) in WHILE_BREAKABLES else False
 
+    def handle_autofarm():
+        global AUTOFARM_ENABLED
+        
+        if Config.USE_AUTO_FARM:
+            if AUTOFARM_ENABLED:
+                Input.click(HomeUICordinates.AutoFarm)
+                AUTOFARM_ENABLED = False
+                wait(1)
+                Input.click(HomeUICordinates.AutoFarm)
+                AUTOFARM_ENABLED = True
+            else:
+                Input.click(HomeUICordinates.AutoFarm)
+                AUTOFARM_ENABLED = True
+        
     def teleport(area: str):
         Input.click(HomeUICordinates.Teleport)
         wait(1)
@@ -206,7 +238,7 @@ def main():
     # Main Loop
     wait(2)
 
-    def switch(name, goal: BattleGoal, current_goal_id):
+    def switch(name, goal: BattleGoal, current_goal_id, pre_teleport = True):
         global ACTIVE_ITEMS, ACTIVE_POTIONS, AUTOFARM_ENABLED
         
         print("Current Quest: "+name)
@@ -232,16 +264,7 @@ def main():
                 Input.click(HomeUICordinates.Exit) # Just in case it goes over the gold maker by accident
                 wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
                 active = True
                             
@@ -341,23 +364,15 @@ def main():
                     Input.click((100, 100))
                     return
                 
-                teleport(FIRST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                teleport(LAST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                Input.walk(25, "right")
-                wait(.5)
+                if pre_teleport:
+                    teleport(FIRST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    teleport(LAST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    Input.walk(25, "right")
+                    wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
                 active = True
                 
@@ -391,23 +406,15 @@ def main():
                     Input.click((100, 100))
                     return
                 
-                teleport(FIRST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                teleport(LAST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                Input.walk(25, "right")
-                wait(.5)
+                if pre_teleport:
+                    teleport(FIRST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    teleport(LAST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    Input.walk(25, "right")
+                    wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
                 active = True
                 
@@ -441,23 +448,15 @@ def main():
                     Input.click((100, 100))
                     return
                 
-                teleport(FIRST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                teleport(LAST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                Input.walk(25, "right")
-                wait(.5)
+                if pre_teleport:
+                    teleport(FIRST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    teleport(LAST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    Input.walk(25, "right")
+                    wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
                 active = True
                 
@@ -491,23 +490,15 @@ def main():
                     Input.click((100, 100))
                     return
                 
-                teleport(FIRST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                teleport(LAST_AREA)
-                wait(Config.TELEPORT_DELAY)
-                Input.walk(25, "right")
-                wait(.5)
+                if pre_teleport:
+                    teleport(FIRST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    teleport(LAST_AREA)
+                    wait(Config.TELEPORT_DELAY)
+                    Input.walk(25, "right")
+                    wait(.5)
 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
                 active = True
                 
@@ -549,17 +540,20 @@ def main():
                 Input.walk(25, "right")
                 wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
+                opposite_goal_id = 3 if current_goal_id == 4 else 4
+                opposite_goal = Goal3() if opposite_goal_id == 3 else Goal4()
+                opposite_goal_name = quest_name(opposite_goal)
+                    
+                if usable_while_breakables(opposite_goal):
+                    item_usage_thread = threading.Thread(
+                    name="UseItem",
+                    target=switch,
+                    args=(opposite_goal_name, opposite_goal, opposite_goal_id, False)
+                    )
+                    item_usage_thread.start()
+                            
                 active = True
                             
                 while active:
@@ -576,6 +570,9 @@ def main():
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
+                                                        
+                            if usable_while_breakables(opposite_goal):
+                                item_usage_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
                         wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
@@ -592,16 +589,7 @@ def main():
                 Input.walk(25, "right")
                 wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
                 active = True
                             
@@ -635,17 +623,20 @@ def main():
                 Input.walk(25, "right")
                 wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
                 
+                opposite_goal_id = 3 if current_goal_id == 4 else 4
+                opposite_goal = Goal3() if opposite_goal_id == 3 else Goal4()
+                opposite_goal_name = quest_name(opposite_goal)
+                    
+                if usable_while_breakables(opposite_goal):
+                    item_usage_thread = threading.Thread(
+                    name="UseItem",
+                    target=switch,
+                    args=(opposite_goal_name, opposite_goal, opposite_goal_id, False)
+                    )
+                    item_usage_thread.start()
+
                 active = True
                             
                 while active:
@@ -662,6 +653,9 @@ def main():
                         else:
                             print(f"[{name}] Quest isn't active!")
                             active = False
+                            
+                            if usable_while_breakables(opposite_goal):
+                                item_usage_thread.join()
                     except:
                         print(f"[{name}] Error connecting to the server!")
                         wait(Config.ACTIVE_QUEST_CHECK_INTERVAL)
@@ -678,16 +672,7 @@ def main():
                 Input.walk(25, "right")
                 wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
 
                 teleport(FIRST_AREA)
                 wait(Config.TELEPORT_DELAY)
@@ -733,16 +718,7 @@ def main():
                 Input.walk(25, "right")
                 wait(.5)
                 
-                if Config.USE_AUTO_FARM:
-                    if AUTOFARM_ENABLED:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = False
-                        wait(1)
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
-                    else:
-                        Input.click(HomeUICordinates.AutoFarm)
-                        AUTOFARM_ENABLED = True
+                handle_autofarm()
 
                 teleport(FIRST_AREA)
                 wait(Config.TELEPORT_DELAY)
@@ -785,22 +761,13 @@ def main():
         Input.walk(25, "right")
         wait(.5)
                 
-        if Config.USE_AUTO_FARM:
-            if AUTOFARM_ENABLED:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = False
-                wait(1)
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
-            else:
-                Input.click(HomeUICordinates.AutoFarm)
-                AUTOFARM_ENABLED = True
+        handle_autofarm()
         
         
     def run():
-        global CURRENT_GOAL, IN_LAST_AREA, LAST_AREA, FIRST_AREA
+        global CURRENT_GOAL, IN_LAST_AREA, LAST_AREA, FIRST_AREA, PASSWORD_ENTERED
         
-        while not Config.MACRO_ENABLED:
+        while not Config.MACRO_ENABLED or not PASSWORD_ENTERED:
             wait(2)
         
         Config.SYSTEM_RUNNING = True

@@ -10,6 +10,8 @@ from time import sleep as wait
 
 Config = AutoConfig(config.config_path)
 
+# TODO: Fix the down function to not use an OS Scheduler and a custom spinlock wait or something
+
 def auto_resize(cords: tuple):
     def get_monitor_resolution():
         monitor = get_monitors()[0]

@@ -303,7 +303,7 @@ class PasswordForm(QWidget):
         self.password_edit.setEchoMode(QLineEdit.Password)
         self.submit_button = QPushButton("Submit")
         self.submit_button.clicked.connect(self.check_password)
-
+    
         self.layout.addWidget(self.password_label)
         self.layout.addWidget(self.password_edit)
         self.layout.addWidget(self.submit_button)
@@ -315,6 +315,7 @@ class PasswordForm(QWidget):
         encrypted_entered_password = hashlib.sha256(entered_password.encode()).hexdigest()
 
         if encrypted_entered_password == stored_password:
+            macro.set_enabled(True)
             main_form = Form()
             main_form.show()
             self.destroy()
