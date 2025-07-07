@@ -1,4 +1,6 @@
-# Getting Started
+# Open Access
+I opened up this repo so everyone can see it! This was just a fun project.
+## Getting Started
 1. Download the zip file and extract the files.
 2. You should end up with 2 files in your directory, `Clan Macro.exe` and `config.ini`.
 3. Ensure you are using a 16:9 aspect ratio monitor (If you are unsure what this is, read [Common Resolutions](#common-resolutions)).
